@@ -14,14 +14,23 @@ import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
  */
 
 contract DecentralizedStableCoin is ERC20Burnable, Ownable{
+
+    error DecentralizedStableCoin__MustBeMoreThanZero();
+    error DecentralizedStableCoin__BurnAmountExceedsBalance();
+
     constructor () ERC20("DecentralizedStableCoin", "DSC") {}
 
     function burn(uint256 _amount) public override onlyOwner {
         uint256 balance = balanceOf(msg.sender);
+        // require (_amount > 0 && _amount < balance , 'Not enough tokens');
         if(_amount <= 0){
-            revert(); // amount should be greater than zero!
+            revert DecentralizedStableCoin__MustBeMoreThanZero(); // amount should be greater than zero!
         }
-        super._burn(_msgSender(),_amount);
+        if(balance < _amount){
+            revert DecentralizedStableCoin__BurnAmountExceedsBalance();// cannot burn more then the user has
+        }
+        // super._burn(_msgSender(),_amount);
+        super.burn(_amount);  //functoin call
 
         
     }
