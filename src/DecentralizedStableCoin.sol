@@ -10,7 +10,7 @@ import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
  * Collateral: Exogenous (Eth and Btc)
  * Minting: Algorithimic
  * Relative Stability: Pegged to USD
- * This is the contract meant to be governed by DSCEngie. This contract is just the ERC20 implimentation of our satable coin system.
+ * This is the contract meant to be governed by DSCEngie. This contract is just the ERC20      implimentation of our satable coin system.
  */
 
 contract DecentralizedStableCoin is ERC20Burnable, Ownable{
