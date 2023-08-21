@@ -20,19 +20,22 @@ pragma solidity ^0.8.19;
 */
 contract DSCEngine {
     
-    function depositeCollateralAndMintDSC() external {}
+    function depositeCollateralAndMintDsc() external {}
 
-    function redeemCollateralForDSC() external {}
+    function depositeCollateral() external {}
 
-    function burnDSC() external {}
+    function redeemCollateralForDsc() external {}
+
+    function redeemCollateral() external {}
+
+    function mintDsc() external {}
+
+    function burnDsc() external {}
 
     function liquidate() external {
         //$100 ETH  --> $40 (liquidated) $60 --> kickout from the system because you are too close
         //$50 DSC
     }
 
-    function getHealthFactor() external {
-
-        
-    }
+    function getHealthFactor() external view {}
 }
