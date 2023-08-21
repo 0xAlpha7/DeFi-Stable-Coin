@@ -19,10 +19,29 @@ pragma solidity ^0.8.19;
 * @notice: This contract is very loosly based on the makerDAO (DAI) system
 */
 contract DSCEngine {
+
+    //!errors
+    error DSCEngine__NeedsMoreThanZero();    
+
+    //!modifiers
+    modifier moreThanZero(uint256 amount) {
+        // require((amount > uint256(0)), "Amount must not be zero");
+        if(amount == 0){
+            revert DSCEngine__NeedsMoreThanZero();
+        }
+        _;
+    }
     
     function depositeCollateralAndMintDsc() external {}
 
-    function depositeCollateral() external {}
+
+    /**
+     * @param tokenCollateralAddress The address of the token todeposit as collateral
+     * @param amountCollateral The amount of collateral to deposit
+     */
+    function depositeCollateral(address tokenCollateralAddress, uint256 amountCollateral) external moreThanZero(amountCollateral) {
+
+    }
 
     function redeemCollateralForDsc() external {}
 
@@ -31,7 +50,6 @@ contract DSCEngine {
     function mintDsc() external {}
 
     function burnDsc() external {}
-
     function liquidate() external {
         //$100 ETH  --> $40 (liquidated) $60 --> kickout from the system because you are too close
         //$50 DSC
