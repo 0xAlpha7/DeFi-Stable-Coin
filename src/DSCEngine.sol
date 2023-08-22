@@ -21,7 +21,8 @@ pragma solidity ^0.8.19;
 contract DSCEngine {
 
     //!errors
-    error DSCEngine__NeedsMoreThanZero();  
+    error DSCEngine__NeedsMoreThanZero(); 
+    error DSCEngine__TokenAddressAndPriceFeedAddressMustBeSameLength(); 
 
     //!state variables
     mapping (address token => address priceFeed) private s_priceFeed;  //token => priceFeed
@@ -41,9 +42,15 @@ contract DSCEngine {
     
     //!functions
     constructor (
-        address[] memory tokenAddress, address[] memory priceFeedAddress
+        address[] memory tokenAddress, address[] memory priceFeedAddress, address dscAddress
     ) {
-        
+        //USD priceFeed
+        if(tokenAddress.length != priceFeedAddress.length){
+            revert DSCEngine__TokenAddressAndPriceFeedAddressMustBeSameLength();
+        }
+        for(uint256 i = 0; i < tokenAddress.length; i++){
+            s_priceFeed[tokenAddress[i]] = priceFeedAddress[i];
+        }
     }
 
     //!external functions
