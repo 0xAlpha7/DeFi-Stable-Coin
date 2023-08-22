@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.19;
+import {DecentralizedStableCoin} from "./DecentralizedStableCoin.sol";
 /*
 * @title: Decentralized Stable Coin Engine
 * @author: Talha
@@ -26,7 +27,7 @@ contract DSCEngine {
 
     //!state variables
     mapping (address token => address priceFeed) private s_priceFeed;  //token => priceFeed
-
+    DecentralizedStableCoin private immutable i_dsc;
 
     //!modifiers
     modifier moreThanZero(uint256 amount) {
@@ -36,9 +37,9 @@ contract DSCEngine {
         }
         _;
     }
-    // modifier isAllowedToken(address token) {
-    //     _;
-    // }
+    modifier isAllowedToken(address token) {
+        _;
+    }
     
     //!functions
     constructor (
@@ -51,6 +52,7 @@ contract DSCEngine {
         for(uint256 i = 0; i < tokenAddress.length; i++){
             s_priceFeed[tokenAddress[i]] = priceFeedAddress[i];
         }
+        i_dsc = DecentralizedStableCoin(dscAddress);
     }
 
     //!external functions
