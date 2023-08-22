@@ -21,7 +21,11 @@ pragma solidity ^0.8.19;
 contract DSCEngine {
 
     //!errors
-    error DSCEngine__NeedsMoreThanZero();    
+    error DSCEngine__NeedsMoreThanZero();  
+
+    //!state variables
+    mapping (address token => address priceFeed) private s_priceFeed;  //token => priceFeed
+
 
     //!modifiers
     modifier moreThanZero(uint256 amount) {
@@ -31,7 +35,18 @@ contract DSCEngine {
         }
         _;
     }
+    // modifier isAllowedToken(address token) {
+    //     _;
+    // }
     
+    //!functions
+    constructor (
+        address[] memory tokenAddress, address[] memory priceFeedAddress
+    ) {
+        
+    }
+
+    //!external functions
     function depositeCollateralAndMintDsc() external {}
 
 
