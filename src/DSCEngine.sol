@@ -33,6 +33,9 @@ contract DSCEngine is ReentrancyGuard {
     //!state variables
     mapping(address token => address priceFeed) private s_priceFeed; //token => priceFeed
     mapping(address user => mapping(address token => uint256 amount)) private s_collateralDeposited;
+    mapping(address user => uint256 amountDscMinted) private s_DSCMinted
+
+
     DecentralizedStableCoin private immutable i_dsc;
 
     //!events
@@ -93,7 +96,20 @@ contract DSCEngine is ReentrancyGuard {
 
     function redeemCollateral() external {}
 
-    function mintDsc() external {}
+
+    /**
+     * @notice Follow CEI pattern (checks effects Interaction)
+     * @param amountDscToMint: The amount of decentralized stable coin to mint
+     * @notice The must have more collateral value than the minimam threshold
+     */
+    function mintDsc(uint256 amountDscToMint) external moreThanZero(amountDscToMint) nonReentrant() {
+        // require(_checkAllowance(), "DSC Engine: allowance not enough");
+        s_DSCMinted[msg.sender] += amountDscToMint
+        //if they minted too much
+        revertIfHealthFactorIsBroken(msg.sender);
+        
+
+    }
 
     function burnDsc() external {}
     function liquidate() external {
@@ -102,4 +118,9 @@ contract DSCEngine is ReentrancyGuard {
     }
 
     function getHealthFactor() external view {}
+
+    //!private and internal functions
+    function revertIfHealthFactorIsBroken(address user) internal view {
+        
+    }
 }
