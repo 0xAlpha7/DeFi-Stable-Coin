@@ -2,6 +2,7 @@
 // This is considered an Exogenous, Decentralized, Anchored (pegged), Crypto Collateralized low volitility coin
 
 pragma solidity ^0.8.18;
+
 import {ERC20Burnable, ERC20} from "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol";
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 
@@ -14,34 +15,34 @@ import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
  * This is the contract meant to be governed by DSCEngie. This contract is just the ERC20      implimentation of our satable coin system.
  */
 
-contract DecentralizedStableCoin is ERC20Burnable, Ownable{
-
+contract DecentralizedStableCoin is ERC20Burnable, Ownable {
     error DecentralizedStableCoin__MustBeMoreThanZero();
     error DecentralizedStableCoin__BurnAmountExceedsBalance();
     error DecentralizedStableCoin__NotZeroAddress();
 
-    constructor () ERC20("DecentralizedStableCoin", "DSC") {}
+    constructor() ERC20("DecentralizedStableCoin", "DSC") {}
 
     function burn(uint256 _amount) public override onlyOwner {
         uint256 balance = balanceOf(msg.sender);
         // require (_amount > 0 && _amount < balance , 'Not enough tokens');
-        if(_amount <= 0){
+        if (_amount <= 0) {
             revert DecentralizedStableCoin__MustBeMoreThanZero(); // amount should be greater than zero!
         }
-        if(balance < _amount){
-            revert DecentralizedStableCoin__BurnAmountExceedsBalance();// cannot burn more then the user has
+        if (balance < _amount) {
+            revert DecentralizedStableCoin__BurnAmountExceedsBalance(); // cannot burn more then the user has
         }
         // super._burn(_msgSender(),_amount);
-        super.burn(_amount);  //functoin call
+        super.burn(_amount); //functoin call
     }
-    function mint(address _to, uint256 _amount) external onlyOwner returns(bool) {
-        if(_to == address(0)){
+
+    function mint(address _to, uint256 _amount) external onlyOwner returns (bool) {
+        if (_to == address(0)) {
             revert DecentralizedStableCoin__NotZeroAddress();
         }
-        if(_amount <= 0){
+        if (_amount <= 0) {
             revert DecentralizedStableCoin__MustBeMoreThanZero();
         }
-        _mint(_to,_amount);//function call
-        return true;       
+        _mint(_to, _amount); //function call
+        return true;
     }
 }
