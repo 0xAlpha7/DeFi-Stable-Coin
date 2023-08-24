@@ -33,7 +33,7 @@ contract DSCEngine is ReentrancyGuard {
     //!state variables
     mapping(address token => address priceFeed) private s_priceFeed; //token => priceFeed
     mapping(address user => mapping(address token => uint256 amount)) private s_collateralDeposited;
-    mapping(address user => uint256 amountDscMinted) private s_DSCMinted
+    mapping(address user => uint256 amountDscMinted) private s_DSCMinted;
 
 
     DecentralizedStableCoin private immutable i_dsc;
@@ -104,7 +104,7 @@ contract DSCEngine is ReentrancyGuard {
      */
     function mintDsc(uint256 amountDscToMint) external moreThanZero(amountDscToMint) nonReentrant() {
         // require(_checkAllowance(), "DSC Engine: allowance not enough");
-        s_DSCMinted[msg.sender] += amountDscToMint
+        s_DSCMinted[msg.sender] += amountDscToMint;
         //if they minted too much
         revertIfHealthFactorIsBroken(msg.sender);
         
