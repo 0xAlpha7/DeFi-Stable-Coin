@@ -120,10 +120,10 @@ contract DSCEngine is ReentrancyGuard {
     function getHealthFactor() external view {}
 
     //!private and internal, view functions
-
-    function _getAccountInformation(address user) private view returns(uint256 totalDscMinted, uint256 collateralValueInUsd) {
-        
-         
+    function _getAccountInformation(address user) private view returns(uint256 totalDscMinted, uint256 collateralValueInUsd) 
+    {
+        totalDscMinted = s_DSCMinted[user];
+        collateralValueInUsd = getAccountCollateralValue(user);         
     }
 
 
@@ -136,16 +136,17 @@ contract DSCEngine is ReentrancyGuard {
         //1: total DSC minted
         //2: total collateral VALUE (make sure the VALUE > total DSC minted)
         (uint256 totalDscMinted, uint256 collateraValueInUsd) = _getAccountInformation(user);
-
-        
     }
 
     function _revertIfHealthFactorIsBroken(address user) internal view {
         // 1: check health factor (do they have enough collateral?)
-        // 2" revert if they do not have  good health factor
-
-
-
-        
+        // 2" revert if they do not have  good health factor        
     }
+
+     //!public and external, view functions
+
+     function getAccountCollateralValue(address user) public view returns (uint256) {
+        //loop throw each collateral token, get the amount they have deposited and map it to the price, to get the USD value
+        
+     }
 }
