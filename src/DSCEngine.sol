@@ -30,11 +30,16 @@ contract DSCEngine is ReentrancyGuard {
     error DSCEngine__TokenAddressAndPriceFeedAddressMustBeSameLength();
     error DSCEngine__NotAllowedToken();
     error DSCEngine__TransferFailed();
+    error DSCEngine__BreaksHealthFactor(uint256 healthFactor);
 
     //!state variables
 
     uint256 private constant ADDITIONAL_FEED_PRECISION = 1e10; 
     uint256 private constant PRECISION = 1e18; 
+    uint256 private constant LIQUDATION_THRESHOLD = 50; //200% collateralized
+    uint256 private constant LIQUDATION_PRECISION = 100;
+    uint256 private constant MIN_HEALTH_FACTOR = 1;
+
 
     mapping(address token => address priceFeed) private s_priceFeed;
     mapping(address user => mapping(address token => uint256 amount)) private s_collateralDeposited;
@@ -113,7 +118,7 @@ contract DSCEngine is ReentrancyGuard {
         // require(_checkAllowance(), "DSC Engine: allowance not enough");
         s_DSCMinted[msg.sender] += amountDscToMint;
         //if they minted too much
-        revertIfHealthFactorIsBroken(msg.sender);
+        _revertIfHealthFactorIsBroken(msg.sender);
         
 
     }
@@ -143,11 +148,30 @@ contract DSCEngine is ReentrancyGuard {
         //1: total DSC minted
         //2: total collateral VALUE (make sure the VALUE > total DSC minted)
         (uint256 totalDscMinted, uint256 collateraValueInUsd) = _getAccountInformation(user);
+        uint256 collateralAdjustedForThreshold = (collateraValueInUsd * LIQUDATION_THRESHOLD) / LIQUDATION_PRECISION;
+
+        //1000 ETH * 50 = 50,000 / 100 = 500
+
+        //150 ETH * 50 = 7500 / 100 = 75 (75 /100 < 1) 
+
+        return (collateralAdjustedForThreshold * PRECISION) / totalDscMinted;
+
+        //100 ETH / 100 DSC = 1.5
+        // return (collateraValueInUsd / totalDscMinted ); //it will not hanle points values
+
     }
 
+
+   /**
+     * check health factor (do they have enough collateral?)
+     * revert if they don't
+     */
     function _revertIfHealthFactorIsBroken(address user) internal view {
-        // 1: check health factor (do they have enough collateral?)
-        // 2" revert if they do not have  good health factor        
+        uint256 userHealthFactor =  _healthFactor(user);
+        if(userHealthFactor < MIN_HEALTH_FACTOR) {
+            revert DSCEngine__BreaksHealthFactor(userHealthFactor);
+        }
+
     }
 
      //!public and external, view functions
@@ -159,6 +183,7 @@ contract DSCEngine is ReentrancyGuard {
             uint256 amount = s_collateralDeposited[user][token];
             totalCollateralValueInUsd += getUsdValue(token, amount);
         }
+        return totalCollateralValueInUsd;
      }
 
      function getUsdValue(address token, uint256 amount) public view returns(uint256) {
@@ -166,6 +191,6 @@ contract DSCEngine is ReentrancyGuard {
         (, int256 price, , ,) = priceFeed.latestRoundData();
         // 1 ETH = $1000
         // The returned value from CL will be 1000 * 1e8 (1e8 is decimal of ETH / USD)
-        return (uint256(price * ADDITIONAL_FEED_PRECISION) * amount) / PRECISION;
+        return ((uint256(price) * ADDITIONAL_FEED_PRECISION) * amount) / PRECISION;
      }
 }
