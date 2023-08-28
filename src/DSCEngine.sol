@@ -31,6 +31,7 @@ contract DSCEngine is ReentrancyGuard {
     error DSCEngine__NotAllowedToken();
     error DSCEngine__TransferFailed();
     error DSCEngine__BreaksHealthFactor(uint256 healthFactor);
+    error DSCEngine__MintFailed();
 
     //!state variables
 
@@ -117,9 +118,12 @@ contract DSCEngine is ReentrancyGuard {
     function mintDsc(uint256 amountDscToMint) external moreThanZero(amountDscToMint) nonReentrant() {
         // require(_checkAllowance(), "DSC Engine: allowance not enough");
         s_DSCMinted[msg.sender] += amountDscToMint;
-        //if they minted too much
+        //if they minted too much ($150 Dsc $100 ETH)
         _revertIfHealthFactorIsBroken(msg.sender);
-        
+        bool minted = i_dsc.mint(msg.sender, amountDscToMint);
+        if(!minted){
+            revert DSCEngine__MintFailed();
+        }
 
     }
 
