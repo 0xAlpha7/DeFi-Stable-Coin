@@ -26,5 +26,12 @@ contract HelperConfig is Script {
             deployerKey: vm.envUint("PRIVATE_KEY")  
         });
     }     
+
+    function getOrCreateAnvilEthConfig() public returns (NetworkConfig memory) {
+        //mock deployment
+        if(activeNetworkConfig.wethUsdPriceFeed != address(0)){
+            return activeNetworkConfig;
+        }        
+    }
     
 }
