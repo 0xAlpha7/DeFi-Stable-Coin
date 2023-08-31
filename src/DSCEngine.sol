@@ -83,15 +83,19 @@ contract DSCEngine is ReentrancyGuard {
     }
 
     //!external functions
-    function depositeCollateralAndMintDsc() external {}
+
+    function depositeCollateralAndMintDsc(address tokenCollateralAddress, uint256 amountCollateral, uint256 amountDscToMint) external {
+        depositeCollateral(tokenCollateralAddress, amountCollateral);
+        mintDsc(amountDscToMint);
+    }
 
     /**
      * @notice follow CEI pattern (checks effects Interaction)
-     * @param tokenCollateralAddress The address of the token todeposit as collateral
+     * @param tokenCollateralAddress The address of the token to deposit as collateral
      * @param amountCollateral The amount of collateral to deposit
      */
     function depositeCollateral(address tokenCollateralAddress, uint256 amountCollateral)
-        external
+        public
         moreThanZero(amountCollateral)
         isAllowedToken(tokenCollateralAddress)
         nonReentrant
@@ -115,7 +119,7 @@ contract DSCEngine is ReentrancyGuard {
      * @param amountDscToMint: The amount of decentralized stable coin to mint
      * @notice The must have more collateral value than the minimam threshold
      */
-    function mintDsc(uint256 amountDscToMint) external moreThanZero(amountDscToMint) nonReentrant() {
+    function mintDsc(uint256 amountDscToMint) public moreThanZero(amountDscToMint) nonReentrant() {
         // require(_checkAllowance(), "DSC Engine: allowance not enough");
         s_DSCMinted[msg.sender] += amountDscToMint;
         //if they minted too much ($150 Dsc $100 ETH)
