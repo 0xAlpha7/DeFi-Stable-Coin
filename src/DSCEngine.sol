@@ -52,6 +52,7 @@ contract DSCEngine is ReentrancyGuard {
 
     //!events
     event CollateralDeposited(address indexed user, address indexed token, uint256 indexed amount); 
+    event CollateralRedeemed(address indexed user, uint256 indexed amount, address indexed token);
 
     //!modifiers
     modifier moreThanZero(uint256 amount) {
@@ -116,7 +117,13 @@ contract DSCEngine is ReentrancyGuard {
 
     function redeemCollateralForDsc() external {}
 
-    function redeemCollateral() external {}
+    // In order to redeem collateral:
+    // 1: Health factor must be over 1 after collateral pull
+    // DRY --> do not repeat yourself 
+    function redeemCollateral(address tokenCollateralAddress, uint256 amountCollateral) external moreThanZero(amountCollateral) nonReentrant() {
+        s_collateralDeposited[msg.sender][tokenCollateralAddress] -= amountCollateral;
+        emit CollateralRedeemed(msg.sender, amountCollateral, tokenCollateralAddress);
+    }
 
 
     /**
