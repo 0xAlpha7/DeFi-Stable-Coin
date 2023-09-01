@@ -115,13 +115,24 @@ contract DSCEngine is ReentrancyGuard {
         
     }
 
-    function redeemCollateralForDsc() external {}
+    /**
+     * @param tokenCollateralAddress: The collateral address to redeem
+     * @param amountCollateral: The amount colateral to redeem 
+     * @param amountDscToBurn: The amount of DSC to burn
+     */
+    function redeemCollateralForDsc(address tokenCollateralAddress, uint256 amountCollateral, uint256 amountDscToBurn) external {
+        burnDsc(amountDscToBurn);
+        redeemCollateral(tokenCollateralAddress, amountCollateral);
+        // redeemCollateral already checks health factor
+
+
+    }
 
     // In order to redeem collateral:
     // 1: Health factor must be over 1 after collateral pull
     // DRY: do not repeat yourself
     // Follow CEI: Checks, Effects, Interaction 
-    function redeemCollateral(address tokenCollateralAddress, uint256 amountCollateral) external moreThanZero(amountCollateral) nonReentrant() {
+    function redeemCollateral(address tokenCollateralAddress, uint256 amountCollateral) public moreThanZero(amountCollateral) nonReentrant() {
         s_collateralDeposited[msg.sender][tokenCollateralAddress] -= amountCollateral;
         emit CollateralRedeemed(msg.sender, amountCollateral, tokenCollateralAddress);
         bool success = IERC20(tokenCollateralAddress).transfer(msg.sender, amountCollateral);
@@ -150,7 +161,7 @@ contract DSCEngine is ReentrancyGuard {
     }
 
     //no need to check if this breaks health factor
-    function burnDsc(uint256 amount) external moreThanZero(amount) {
+    function burnDsc(uint256 amount) public moreThanZero(amount) {
         s_DSCMinted[msg.sender] -= amount;
         bool success = i_dsc.transferFrom(msg.sender, address(this), amount);
         if(!success){
