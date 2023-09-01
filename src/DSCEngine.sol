@@ -128,6 +128,7 @@ contract DSCEngine is ReentrancyGuard {
         if(!success){
             revert DSCEngine__TransferFailed();
         }  
+        _revertIfHealthFactorIsBroken(msg.sender);
     }
 
 
