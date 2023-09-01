@@ -119,10 +119,15 @@ contract DSCEngine is ReentrancyGuard {
 
     // In order to redeem collateral:
     // 1: Health factor must be over 1 after collateral pull
-    // DRY --> do not repeat yourself 
+    // DRY: do not repeat yourself
+    // Follow CEI: Checks, Effects, Interaction 
     function redeemCollateral(address tokenCollateralAddress, uint256 amountCollateral) external moreThanZero(amountCollateral) nonReentrant() {
         s_collateralDeposited[msg.sender][tokenCollateralAddress] -= amountCollateral;
         emit CollateralRedeemed(msg.sender, amountCollateral, tokenCollateralAddress);
+        bool success = IERC20(tokenCollateralAddress).transfer(msg.sender, amountCollateral);
+        if(!success){
+            revert DSCEngine__TransferFailed();
+        }  
     }
 
 
