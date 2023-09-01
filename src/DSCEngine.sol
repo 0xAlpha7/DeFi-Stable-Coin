@@ -149,7 +149,16 @@ contract DSCEngine is ReentrancyGuard {
 
     }
 
-    function burnDsc() external {}
+    //no need to check if this breaks health factor
+    function burnDsc(uint256 amount) external moreThanZero(amount) {
+        s_DSCMinted[msg.sender] -= amount;
+        bool success = i_dsc.transferFrom(msg.sender, address(this), amount);
+        if(!success){
+            revert DSCEngine__TransferFailed();
+        }
+        i_dsc.burn(amount);
+    }
+    
     function liquidate() external {
         //$100 ETH  --> $40 (liquidated) $60 --> kickout from the system because you are too close
         //$50 DSC
