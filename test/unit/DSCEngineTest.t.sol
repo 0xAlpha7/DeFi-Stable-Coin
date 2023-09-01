@@ -45,7 +45,7 @@ contract DSCEngineTest is Test {
         vm.expectRevert(DSCEngine.DSCEngine__NeedsMoreThanZero.selector);
         dsce.depositeCollateral(weth, 0);
         vm.stopPrank();
-
     }
+    
     
 } 
