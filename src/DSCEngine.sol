@@ -171,7 +171,15 @@ contract DSCEngine is ReentrancyGuard {
         i_dsc.burn(amount);
     }
     
-    function liquidate() external {
+
+    /**
+     * @param collateral: The ERC20 collateral address to liquidate from user
+     * @param user: The user who has broken the health factor. Their _helthFactor should be below MIN_HEALTH_FACTOR
+     * @param debtToCover: The amount of DSC you want to burn to improve the users health factor
+     * @notice You can partially liquidate a user
+     * @notice You will get a liquidation bonus for taking the users funds
+     */
+    function liquidate(address collateral, address user, uint256 debtToCover) external {
         //$100 ETH  --> $40 (liquidated) $60 --> kickout from the system because you are too close
         //$50 DSC
     }
