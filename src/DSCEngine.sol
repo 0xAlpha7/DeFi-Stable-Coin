@@ -179,6 +179,8 @@ contract DSCEngine is ReentrancyGuard {
      * @notice You can partially liquidate a user
      * @notice You will get a liquidation bonus for taking the users funds
      * @notice This function working assumes the protocol will be roughly 200% collateralized in order for this to work
+     * @notice A known bug would be if the protocol were 100% or less collateralized, then we wouldn't be able to incentive the liquidators
+     * for example: if the price of the collateral plummeted before anyone could be liquidated
      */
     function liquidate(address collateral, address user, uint256 debtToCover) external {
         //$100 ETH  --> $40 (liquidated) $60 --> kickout from the system because you are too close
