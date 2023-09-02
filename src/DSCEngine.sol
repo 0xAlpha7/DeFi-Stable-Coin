@@ -32,6 +32,7 @@ contract DSCEngine is ReentrancyGuard {
     error DSCEngine__TransferFailed();
     error DSCEngine__BreaksHealthFactor(uint256 healthFactor);
     error DSCEngine__MintFailed();
+    error DSCEngine__HealthFactorOk();
 
     //!state variables
 
@@ -39,7 +40,7 @@ contract DSCEngine is ReentrancyGuard {
     uint256 private constant PRECISION = 1e18; 
     uint256 private constant LIQUDATION_THRESHOLD = 50; //200% collateralized
     uint256 private constant LIQUDATION_PRECISION = 100;
-    uint256 private constant MIN_HEALTH_FACTOR = 1;
+    uint256 private constant MIN_HEALTH_FACTOR = 1e18;
 
 
     mapping(address token => address priceFeed) private s_priceFeed;
@@ -181,10 +182,17 @@ contract DSCEngine is ReentrancyGuard {
      * @notice This function working assumes the protocol will be roughly 200% collateralized in order for this to work
      * @notice A known bug would be if the protocol were 100% or less collateralized, then we wouldn't be able to incentive the liquidators
      * for example: if the price of the collateral plummeted before anyone could be liquidated
+     * Follow: CEI (checks, effects, interaction)
      */
-    function liquidate(address collateral, address user, uint256 debtToCover) external {
+    function liquidate(address collateral, address user, uint256 debtToCover) external moreThanZero(debtToCover) nonReentrant() {
         //$100 ETH  --> $40 (liquidated) $60 --> kickout from the system because you are too close
         //$50 DSC
+        uint256 statingUserHealthFactor = _healthFactor(user);
+        if(statingUserHealthFactor >= MIN_HEALTH_FACTOR){
+            revert DSCEngine__HealthFactorOk();
+        }
+        //burn their DSC "debt" and take their collateral
+        uint256 tokenAmountFromDebtCovered = getTokenAmountFromUsd(collateral, debtToCover);
     }
 
     function getHealthFactor() external view {}
@@ -233,6 +241,12 @@ contract DSCEngine is ReentrancyGuard {
     }
 
      //!public and external, view functions
+
+     function getTokenAmountFromUsd(address token, uint256 amountInWei) public view returns(uint256){
+        AggregatorV3Interface priceFeed = AggregatorV3Interface(s_priceFeed[token]);
+        (, int256 price,,,) = priceFeed.latestRoundData();
+        return (amountInWei * PRECISION) / (uint256(price) * ADDITIONAL_FEED_PRECISION);
+     } 
 
      function getAccountCollateralValue(address user) public view returns (uint256 totalCollateralValueInUsd) {
         //loop throw each collateral token, get the amount they have deposited and map it to the price, to get the USD value
