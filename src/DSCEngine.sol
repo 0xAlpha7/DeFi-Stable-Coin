@@ -192,7 +192,7 @@ contract DSCEngine is ReentrancyGuard {
             revert DSCEngine__HealthFactorOk();
         }
         //burn their DSC "debt" and take their collateral
-        uint256 tokenAmountFromDebtCovered = getTokenAmountFromUsd(collateral, debtToCover);
+        
     }
 
     function getHealthFactor() external view {}
