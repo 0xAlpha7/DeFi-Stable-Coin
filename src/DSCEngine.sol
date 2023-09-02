@@ -178,6 +178,7 @@ contract DSCEngine is ReentrancyGuard {
      * @param debtToCover: The amount of DSC you want to burn to improve the users health factor
      * @notice You can partially liquidate a user
      * @notice You will get a liquidation bonus for taking the users funds
+     * @notice This function working assumes the protocol will be roughly 200% collateralized in order for this to work
      */
     function liquidate(address collateral, address user, uint256 debtToCover) external {
         //$100 ETH  --> $40 (liquidated) $60 --> kickout from the system because you are too close
