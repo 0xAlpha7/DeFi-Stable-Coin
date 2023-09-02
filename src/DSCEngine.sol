@@ -196,7 +196,8 @@ contract DSCEngine is ReentrancyGuard {
         //burn their DSC "debt" and take their collateral
         uint256 tokenAmountFromDebtCovered = getTokenAmountFromUsd(collateral, debtToCover);
         //give 10% bonus
-        uint256 liquidatorBonus = (tokenAmountFromDebtCovered * LIQUIDATION_BONUS) / LIQUDATION_PRECISION;
+        uint256 bonusCollateral = (tokenAmountFromDebtCovered * LIQUIDATION_BONUS) / LIQUDATION_PRECISION;
+        uint256 totalCollateralRedeem = tokenAmountFromDebtCovered + bonusCollateral;
     }
 
     function getHealthFactor() external view {}
