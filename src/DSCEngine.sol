@@ -161,8 +161,8 @@ contract DSCEngine is ReentrancyGuard {
 
     //no need to check if this breaks health factor
     function burnDsc(uint256 amount) public moreThanZero(amount) {
-      
-      
+        _burnDsc(amount, msg.sender, msg.sender);
+        _revertIfHealthFactorIsBroken(msg.sender);  //i don't think this would ever hit
     }
     
 
