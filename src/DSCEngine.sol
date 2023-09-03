@@ -161,12 +161,8 @@ contract DSCEngine is ReentrancyGuard {
 
     //no need to check if this breaks health factor
     function burnDsc(uint256 amount) public moreThanZero(amount) {
-        s_DSCMinted[msg.sender] -= amount;
-        bool success = i_dsc.transferFrom(msg.sender, address(this), amount);
-        if(!success){
-            revert DSCEngine__TransferFailed();
-        }
-        i_dsc.burn(amount);
+      
+      
     }
     
 
@@ -195,12 +191,25 @@ contract DSCEngine is ReentrancyGuard {
         uint256 totalCollateralRedeem = tokenAmountFromDebtCovered + bonusCollateral;
         _redeemCollateral(collateral, totalCollateralRedeem, user, msg.sender); 
         //burn DSC
-         
+
     }
 
     function getHealthFactor() external view {}
 
     //!private and internal, view functions
+
+    /**
+     * @dev Low-level internal function, do not call unless the function calling it is checking for health factors being broken
+     */
+
+    function _burnDsc(uint256 amountDscToBurn, address onBehalfOf, address dscFrom) private {
+        s_DSCMinted[onBehalfOf] -= amountDscToBurn;
+        bool success = i_dsc.transferFrom(dscFrom, address(this), amountDscToBurn);
+        if(!success){
+            revert DSCEngine__TransferFailed();
+        }
+        i_dsc.burn(amountDscToBurn);
+    }
 
     function _redeemCollateral(address tokenCollateralAddress, uint256 amountCollateral, address from, address to) private {
         s_collateralDeposited[from][tokenCollateralAddress] -= amountCollateral;
