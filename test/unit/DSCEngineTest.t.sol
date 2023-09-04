@@ -27,6 +27,9 @@ contract DSCEngineTest is Test {
         (dsc, dsce, config) = deployer.run(); 
         (ethUsdPriceFeed, btcUsdPriceFeed , weth, , ) = config.activeNetworkConfig();
         ERC20Mock(weth).mint(USER, STARTING_ERC20_BALANCE);
+        
+        // ERC20Mock ranToken = new ERC20Mock();
+        // ranToken.transfer(USER, AMOUNT_COLLATERAL);
     }
 
      //TODO: constructor tests
@@ -52,6 +55,14 @@ contract DSCEngineTest is Test {
         assertEq(expectedUsd, actualUsd); 
     }  
 
+    function testGetTokenAmountFromUsd() public {
+        uint256 usdAmount = 100 ether;
+        uint256 expectedWeth = 0.05 ether;
+        uint256 actualWeth = dsce.getTokenAmountFromUsd(weth, usdAmount);
+        assertEq(expectedWeth, actualWeth);
+        
+    }
+
     //TODO: deposit collateral test
     function testRevertsIfCollateralZero() public{
         vm.startPrank(USER);
@@ -59,6 +70,14 @@ contract DSCEngineTest is Test {
 
         vm.expectRevert(DSCEngine.DSCEngine__NeedsMoreThanZero.selector);
         dsce.depositeCollateral(weth, 0);
+        vm.stopPrank();
+    }
+    function testRevertsWithUnapprovedCollateral() public {
+        // ERC20Mock ranToken = new ERC20Mock();
+        // ranToken.transfer(USER, AMOUNT_COLLATERAL);
+        vm.startPrank(USER);
+        vm.expectRevert(DSCEngine.DSCEngine__NotAllowedToken.selector);
+        dsce.depositeCollateral(address(weth), AMOUNT_COLLATERAL);
         vm.stopPrank();
     }
     
