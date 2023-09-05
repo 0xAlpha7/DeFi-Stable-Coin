@@ -48,8 +48,6 @@ contract DSCEngineTest is Test {
 
         vm.expectRevert(DSCEngine.DSCEngine__TokenAddressAndPriceFeedAddressMustBeSameLength.selector);
         new DSCEngine(tokenAddresses, priceFeedAddresses, address(dsc));
-
-
      }
 
     //TODO: price tests
@@ -66,7 +64,6 @@ contract DSCEngineTest is Test {
         uint256 expectedWeth = 0.05 ether;
         uint256 actualWeth = dsce.getTokenAmountFromUsd(weth, usdAmount);
         assertEq(expectedWeth, actualWeth);
-        
     }
 
     //TODO: deposit collateral test
@@ -78,6 +75,7 @@ contract DSCEngineTest is Test {
         dsce.depositeCollateral(weth, 0);
         vm.stopPrank();
     }
+
     function testRevertsWithUnapprovedCollateral() public {
         ERC20Mock ranToken = new ERC20Mock("Ran", "Ran", USER, AMOUNT_COLLATERAL);
         vm.startPrank(USER);
@@ -86,16 +84,13 @@ contract DSCEngineTest is Test {
         vm.stopPrank();
     }
     
-    function canDepositCollateralAndGetAccointInfo(address user) public depositedCollateral() {
-        (uint256 totalDscMinted, uint256 collateralValueInUsd) = dsce.getAccountInformation(user);
+    function testcanDepositCollateralAndGetAccointInfo() public depositedCollateral() {
+        (uint256 totalDscMinted, uint256 collateralValueInUsd) = dsce.getAccountInformation(USER);
         
         uint256 expectedTotalDscMinted = 0;
-        uint256 expectedCollateralValueInUsd = dsce.getTokenAmountFromUsd(weth, collateralValueInUsd);
+        uint256 expectedDepositAmount = dsce.getTokenAmountFromUsd(weth, collateralValueInUsd);
         assertEq(totalDscMinted, expectedTotalDscMinted);
-        assertEq(collateralValueInUsd, expectedCollateralValueInUsd);
-
-
-        
+        assertEq(AMOUNT_COLLATERAL, expectedDepositAmount);
     }
     
     
