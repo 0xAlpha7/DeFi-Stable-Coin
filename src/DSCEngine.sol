@@ -286,13 +286,18 @@ contract DSCEngine is ReentrancyGuard {
             totalCollateralValueInUsd += getUsdValue(token, amount);
         }
         return totalCollateralValueInUsd;
-     }
+    }
 
-     function getUsdValue(address token, uint256 amount) public view returns(uint256) {
+    function getUsdValue(address token, uint256 amount) public view returns(uint256) {
         AggregatorV3Interface priceFeed = AggregatorV3Interface(s_priceFeed[token]);
         (, int256 price, , ,) = priceFeed.latestRoundData();
         // 1 ETH = $1000
         // The returned value from CL will be 1000 * 1e8 (1e8 is decimal of ETH / USD)
         return ((uint256(price) * ADDITIONAL_FEED_PRECISION) * amount) / PRECISION;
-     }
+    }
+
+    function getAccountInformation(address user) external view returns(uint256 totalDscMinted, uint256 collatreralValueInUsd) {
+        (totalDscMinted, collatreralValueInUsd) = _getAccountInformation(user);
+        
+    }
 }
