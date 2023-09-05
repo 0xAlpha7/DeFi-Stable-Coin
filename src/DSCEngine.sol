@@ -267,7 +267,11 @@ contract DSCEngine is ReentrancyGuard {
         if(userHealthFactor < MIN_HEALTH_FACTOR) {
             revert DSCEngine__BreaksHealthFactor(userHealthFactor);
         }
-
+    }
+    function _calculateHealthFactor(uint256 totalDscMinted, uint256 collateralValueInUsd) internal pure returns(uint256) {
+        if(totalDscMinted == 0) return type(uint256).max;  
+        uint256 collateralAdjustedForThreshold = (collateralValueInUsd * LIQUDATION_THRESHOLD) / LIQUDATION_PRECISION;
+        return (collateralAdjustedForThreshold * 1e18) / totalDscMinted;       
     }
 
      //!public and external, view functions
@@ -287,6 +291,10 @@ contract DSCEngine is ReentrancyGuard {
         }
         return totalCollateralValueInUsd;
     }
+    
+    function calculateHealthFactor(uint256 totalDscMinted, uint256 collateralValueInUsd) external pure returns(uint256){
+        return _calculateHealthFactor(totalDscMinted, collateralValueInUsd);
+    }
 
     function getUsdValue(address token, uint256 amount) public view returns(uint256) {
         AggregatorV3Interface priceFeed = AggregatorV3Interface(s_priceFeed[token]);
@@ -294,12 +302,6 @@ contract DSCEngine is ReentrancyGuard {
         // 1 ETH = $1000
         // The returned value from CL will be 1000 * 1e8 (1e8 is decimal of ETH / USD)
         return ((uint256(price) * ADDITIONAL_FEED_PRECISION) * amount) / PRECISION;
-    }
-
-    function _calculateHealthFactor(uint256 totalDscMinted, uint256 collateralValueInUsd) internal pure returns(uint256) {
-        if(totalDscMinted == 0) return type(uint256).max;  
-        uint256 collateralAdjustedForThreshold = (collateralValueInUsd * LIQUDATION_THRESHOLD) / LIQUDATION_PRECISION;
-        return (collateralAdjustedForThreshold * 1e18) / totalDscMinted;       
     }
 
     function getAccountInformation(address user) external view returns(uint256 totalDscMinted, uint256 collatreralValueInUsd) {
