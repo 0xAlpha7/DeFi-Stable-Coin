@@ -39,7 +39,7 @@ contract DSCEngine is ReentrancyGuard {
 
     uint256 private constant ADDITIONAL_FEED_PRECISION = 1e10; 
     uint256 private constant PRECISION = 1e18; 
-    uint256 private constant LIQUDATION_THRESHOLD = 50; //200% collateralized
+    uint256 private constant LIQUIDATION_THRESHOLD = 50; //200% collateralized
     uint256 private constant LIQUDATION_PRECISION = 100;
     uint256 private constant MIN_HEALTH_FACTOR = 1e18;
     uint256 private constant LIQUIDATION_BONUS = 10;  //10% bonus
@@ -244,7 +244,7 @@ contract DSCEngine is ReentrancyGuard {
         //1: total DSC minted
         //2: total collateral VALUE (make sure the VALUE > total DSC minted)
         (uint256 totalDscMinted, uint256 collateraValueInUsd) = _getAccountInformation(user);
-        uint256 collateralAdjustedForThreshold = (collateraValueInUsd * LIQUDATION_THRESHOLD) / LIQUDATION_PRECISION;
+        uint256 collateralAdjustedForThreshold = (collateraValueInUsd * LIQUIDATION_THRESHOLD) / LIQUDATION_PRECISION;
 
         //1000 ETH * 50 = 50,000 / 100 = 500
 
@@ -270,7 +270,7 @@ contract DSCEngine is ReentrancyGuard {
     }
     function _calculateHealthFactor(uint256 totalDscMinted, uint256 collateralValueInUsd) internal pure returns(uint256) {
         if(totalDscMinted == 0) return type(uint256).max;  
-        uint256 collateralAdjustedForThreshold = (collateralValueInUsd * LIQUDATION_THRESHOLD) / LIQUDATION_PRECISION;
+        uint256 collateralAdjustedForThreshold = (collateralValueInUsd * LIQUIDATION_THRESHOLD) / LIQUDATION_PRECISION;
         return (collateralAdjustedForThreshold * 1e18) / totalDscMinted;       
     }
 
@@ -310,6 +310,26 @@ contract DSCEngine is ReentrancyGuard {
 
     function getAccountInformation(address user) external view returns(uint256 totalDscMinted, uint256 collatreralValueInUsd) {
         (totalDscMinted, collatreralValueInUsd) = _getAccountInformation(user);
+    }
+
+    function getPrecision() external pure returns(uint256) {
+        return PRECISION;
+    }
+
+    function getAdditionalFeedPrecision() external pure returns(uint256) {
+        return ADDITIONAL_FEED_PRECISION;
+    }
+
+     function getLiquidationThreshold() external pure returns (uint256) {
+        return LIQUIDATION_THRESHOLD;
+    }
+
+    function getLiquidationBonus() external pure returns (uint256) {
+        return LIQUIDATION_BONUS;
+    }
+
+    function getMinHealthFactor() external pure returns (uint256) {
+        return MIN_HEALTH_FACTOR;
     }
 
    
