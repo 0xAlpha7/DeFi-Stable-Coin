@@ -274,6 +274,14 @@ contract DSCEngine is ReentrancyGuard {
         return (collateralAdjustedForThreshold * 1e18) / totalDscMinted;       
     }
 
+    function _getUsdValue(address token, uint256 amount) private view returns(uint256) {
+        AggregatorV3Interface priceFeed = AggregatorV3Interface(s_priceFeed[token]);
+        (, int256 price, , ,) = priceFeed.latestRoundData();
+        // 1 ETH = $1000
+        // The returned value from CL will be 1000 * 1e8 (1e8 is decimal of ETH / USD)
+        return ((uint256(price) * ADDITIONAL_FEED_PRECISION) * amount) / PRECISION;
+    }
+
      //!public and external, view functions
 
      function getTokenAmountFromUsd(address token, uint256 amountInWei) public view returns(uint256){
@@ -287,7 +295,7 @@ contract DSCEngine is ReentrancyGuard {
         for(uint256 i = 0; i < s_collateralTokens.length; i++){
             address token = s_collateralTokens[i];
             uint256 amount = s_collateralDeposited[user][token];
-            totalCollateralValueInUsd += getUsdValue(token, amount);
+            totalCollateralValueInUsd += _getUsdValue(token, amount);
         }
         return totalCollateralValueInUsd;
     }
@@ -295,17 +303,15 @@ contract DSCEngine is ReentrancyGuard {
     function calculateHealthFactor(uint256 totalDscMinted, uint256 collateralValueInUsd) external pure returns(uint256){
         return _calculateHealthFactor(totalDscMinted, collateralValueInUsd);
     }
-
-    function getUsdValue(address token, uint256 amount) public view returns(uint256) {
-        AggregatorV3Interface priceFeed = AggregatorV3Interface(s_priceFeed[token]);
-        (, int256 price, , ,) = priceFeed.latestRoundData();
-        // 1 ETH = $1000
-        // The returned value from CL will be 1000 * 1e8 (1e8 is decimal of ETH / USD)
-        return ((uint256(price) * ADDITIONAL_FEED_PRECISION) * amount) / PRECISION;
+    
+    function getUsdValue(address token, uint256 amount) external view returns (uint256){
+        return _getUsdValue(token, amount);
     }
 
     function getAccountInformation(address user) external view returns(uint256 totalDscMinted, uint256 collatreralValueInUsd) {
         (totalDscMinted, collatreralValueInUsd) = _getAccountInformation(user);
-        
     }
+
+   
+
 }
