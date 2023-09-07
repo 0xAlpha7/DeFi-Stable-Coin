@@ -92,6 +92,12 @@ contract DSCEngineTest is Test {
         assertEq(totalDscMinted, expectedTotalDscMinted);
         assertEq(AMOUNT_COLLATERAL, expectedDepositAmount);
     }
+
+    function testCanDepositCollateralWithoutMinting() public depositedCollateral() {
+        uint256 userBalance = dsc.balanceOf(USER);
+        assertEq(userBalance, 0);
+        
+    }
     
     
 } 
