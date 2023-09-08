@@ -129,4 +129,10 @@ contract DSCEngineTest is Test {
         assertEq(userBalance, AMOUNT_TO_MINT);
         
     }
+
+    //TODO  mintDsc Tests 
+    function testRevertsIfMintedAmontIsZero() public  {
+        
+        
+    }
 } 
