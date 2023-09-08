@@ -9,6 +9,7 @@ import {DSCEngine} from "../../src/DSCEngine.sol";
 import {HelperConfig} from "../../script/HelperConfig.s.sol";
 import {ERC20Mock} from "@openzeppelin/contracts/mocks/ERC20Mock.sol";
 import {MockV3Aggregator} from "../../test/mocks/MockV3Aggregator.sol";
+import {console} from "forge-std/console.sol";
 
 contract DSCEngineTest is Test {
     DeployDSC deployer;
@@ -104,6 +105,10 @@ contract DSCEngineTest is Test {
     function testRevertsIfMintedDscBreaksHealthFactor() public {
         (, int256 price,,,) = MockV3Aggregator(ethUsdPriceFeed).latestRoundData();
         AMOUNT_TO_MINT = (AMOUNT_COLLATERAL * (uint256(price) * dsce.getAdditionalFeedPrecision())) / dsce.getPrecision();
+
+        // uint256 price = dsce.getUsdValue(ethUsdPriceFeed, AMOUNT_COLLATERAL);
+        // console.log("price:", price);
+
 
         vm.startPrank(USER);
         ERC20Mock(weth).approve(address(dsce), AMOUNT_COLLATERAL);
