@@ -133,7 +133,7 @@ contract DSCEngineTest is Test {
     //TODO  mintDsc Tests 
     function testRevertsIfMintedAmontIsZero() public  {
         vm.startPrank(USER);
-        ERC20Mock(weth).approve(address(dsc), AMOUNT_COLLATERAL);
+        ERC20Mock(weth).approve(address(dsce), AMOUNT_COLLATERAL);
         dsce.depositeCollateralAndMintDsc(weth, AMOUNT_COLLATERAL, AMOUNT_TO_MINT);
         vm.expectRevert(DSCEngine.DSCEngine__NeedsMoreThanZero.selector);
         dsce.mintDsc(0);
