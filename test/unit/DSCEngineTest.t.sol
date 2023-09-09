@@ -160,7 +160,17 @@ contract DSCEngineTest is Test {
         dsce.mintDsc(AMOUNT_TO_MINT);
         uint256 userBalance = dsc.balanceOf(USER);
         assertEq(userBalance, AMOUNT_TO_MINT);
+    }
 
+    //TODO: BurnDsc test
+    
+    function testRevertsIfBurnAmountIsZero() public{
+        vm.startPrank(USER);
+        ERC20Mock(weth).approve(address(dsce), AMOUNT_COLLATERAL);
+        dsce.depositeCollateralAndMintDsc(weth, AMOUNT_COLLATERAL, AMOUNT_TO_MINT);
+        vm.expectRevert(DSCEngine.DSCEngine__NeedsMoreThanZero.selector);
+        dsce.burnDsc(0);
+        vm.stopPrank();
     }
       
 } 
