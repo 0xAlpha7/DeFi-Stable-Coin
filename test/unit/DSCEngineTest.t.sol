@@ -172,5 +172,10 @@ contract DSCEngineTest is Test {
         dsce.burnDsc(0);
         vm.stopPrank();
     }
+    function testCantBurnMoreThanUserHas() public {
+        vm.startPrank(USER);
+        vm.expectRevert();
+        dsce.burnDsc(1);
+    }
       
 } 
