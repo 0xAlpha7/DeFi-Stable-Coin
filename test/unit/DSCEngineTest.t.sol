@@ -187,5 +187,11 @@ contract DSCEngineTest is Test {
         uint256 userBalance = dsc.balanceOf(USER);
         assertEq(userBalance, 0);
     }
+
+    //TODO: redeemCollateral Tests
+
+    function testRevertsIfRedeemAmountIsZero() public {
+        
+    }
       
 } 
