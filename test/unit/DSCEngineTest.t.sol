@@ -12,6 +12,9 @@ import {MockV3Aggregator} from "../../test/mocks/MockV3Aggregator.sol";
 import {console} from "forge-std/console.sol";
 
 contract DSCEngineTest is Test {
+
+    event CollateralRedeemed(address indexed redeemFrom, address indexed redeemTo, address token, uint256 amount );  //if redeemFrom != redeemTo, then it wasw liquated
+
     DeployDSC deployer;
     DecentralizedStableCoin dsc;
     DSCEngine dsce;
@@ -205,6 +208,16 @@ contract DSCEngineTest is Test {
         uint256 userBalance = ERC20Mock(weth).balanceOf(USER);
         assertEq(userBalance, AMOUNT_COLLATERAL);
         vm.stopPrank();
+    }
+
+    function testEmitCollateralRedeemedWithCorrectsArgs() public depositedCollateral() {
+        vm.expectEmit(true, true, true, true, address(dsce));
+        emit CollateralRedeemed(USER, USER, weth, AMOUNT_COLLATERAL);
+        vm.startPrank(USER);
+        // dsce.redeemCollateral(weth, AMOUNT_COLLATERAL);
+        dsce.redeemCollateral(weth, AMOUNT_COLLATERAL);
+        vm.stopPrank();
+        
     }
       
 } 
