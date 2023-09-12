@@ -234,6 +234,9 @@ contract DSCEngineTest is Test {
         dsc.approve(address(dsce), AMOUNT_TO_MINT);
         dsce.redeemCollateralForDsc(weth, AMOUNT_COLLATERAL, AMOUNT_TO_MINT);
         vm.stopPrank();
+
+        uint256 userBalance = dsc.balanceOf(USER);
+        assertEq(userBalance, 0);
     }
       
 } 
