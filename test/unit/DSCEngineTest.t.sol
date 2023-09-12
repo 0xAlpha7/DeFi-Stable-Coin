@@ -214,10 +214,17 @@ contract DSCEngineTest is Test {
         vm.expectEmit(true, true, true, true, address(dsce));
         emit CollateralRedeemed(USER, USER, weth, AMOUNT_COLLATERAL);
         vm.startPrank(USER);
-        // dsce.redeemCollateral(weth, AMOUNT_COLLATERAL);
         dsce.redeemCollateral(weth, AMOUNT_COLLATERAL);
         vm.stopPrank();
-        
+    }
+
+    //TODO: redeem collateral for dsc
+    function testMustRedeemMoreThanZero() public depositedCollateralAndMintedDsc {
+        vm.startPrank(USER);
+        dsc.approve(address(dsce), AMOUNT_TO_MINT);
+        vm.expectRevert(DSCEngine.DSCEngine__NeedsMoreThanZero.selector);
+        dsce.redeemCollateralForDsc(weth, 0, AMOUNT_TO_MINT);
+        vm.stopPrank();
     }
       
 } 
