@@ -255,10 +255,12 @@ contract DSCEngineTest is Test {
 
     function testHealthFactorCanGoBelowOne() public {
         int256 ethUsdUpdatedPrice = 18e8; //1 eth = $18
+        //we need $150 at all times if we have $100 of debt
 
         MockV3Aggregator(ethUsdPriceFeed).updateAnswer(ethUsdUpdatedPrice);
         uint256 userHealthFactor = dsce.getHealthFactor(USER);
-        console.log("userHealthFactor: ", userHealthFactor);
+        //180 collateral / 200 debt = 0.9  
+        assertEq(userHealthFactor, 0.9 ether);
 
     }
 } 
