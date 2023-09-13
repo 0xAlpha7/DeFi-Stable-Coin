@@ -251,6 +251,14 @@ contract DSCEngineTest is Test {
         //10,000 / 100 = 100 health factor 
 
         assertEq(expectedHealthFactor, healthFactor);
+    }
+
+    function testHealthFactorCanGoBelowOne() public {
+        int256 ethUsdUpdatedPrice = 18e8; //1 eth = $18
+
+        MockV3Aggregator(ethUsdPriceFeed).updateAnswer(ethUsdUpdatedPrice);
+        uint256 userHealthFactor = dsce.getHealthFactor(USER);
+        console.log("userHealthFactor: ", userHealthFactor);
 
     }
 } 
