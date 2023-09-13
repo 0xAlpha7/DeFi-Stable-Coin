@@ -246,6 +246,9 @@ contract DSCEngineTest is Test {
         uint256 healthFactor = dsce.getHealthFactor(USER);
 
         //$100 minted at the price of $20,000 collteral at 50% liquidation threshold
+        //mean that we must have $200 collateral at all time
+        //20,000 * 0.5 = 10,000
+        //10,000 / 100 = 100 health factor 
 
         assertEq(expectedHealthFactor, healthFactor);
 
