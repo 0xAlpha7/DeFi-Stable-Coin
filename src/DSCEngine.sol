@@ -243,17 +243,17 @@ contract DSCEngine is ReentrancyGuard {
         // we need 
         //1: total DSC minted
         //2: total collateral VALUE (make sure the VALUE > total DSC minted)
-        (uint256 totalDscMinted, uint256 collateraValueInUsd) = _getAccountInformation(user);
-        uint256 collateralAdjustedForThreshold = (collateraValueInUsd * LIQUIDATION_THRESHOLD) / LIQUDATION_PRECISION;
+        (uint256 totalDscMinted, uint256 collateralValueInUsd) = _getAccountInformation(user);
+    
 
         //1000 ETH * 50 = 50,000 / 100 = 500
 
         //150 ETH * 50 = 7500 / 100 = 75 (75 /100 < 1) 
 
-        return (collateralAdjustedForThreshold * PRECISION) / totalDscMinted;
+        return _calculateHealthFactor(totalDscMinted, collateralValueInUsd);
 
         //100 ETH / 100 DSC = 1.5
-        // return (collateraValueInUsd / totalDscMinted ); //it will not hanle points values
+        // return (collateralValueInUsd / totalDscMinted ); //it will not hanle points values
 
     }
 
@@ -271,7 +271,7 @@ contract DSCEngine is ReentrancyGuard {
     function _calculateHealthFactor(uint256 totalDscMinted, uint256 collateralValueInUsd) internal pure returns(uint256) {
         if(totalDscMinted == 0) return type(uint256).max;  
         uint256 collateralAdjustedForThreshold = (collateralValueInUsd * LIQUIDATION_THRESHOLD) / LIQUDATION_PRECISION;
-        return (collateralAdjustedForThreshold * 1e18) / totalDscMinted;       
+        return (collateralAdjustedForThreshold * PRECISION) / totalDscMinted;       
     }
 
     function _getUsdValue(address token, uint256 amount) private view returns(uint256) {
