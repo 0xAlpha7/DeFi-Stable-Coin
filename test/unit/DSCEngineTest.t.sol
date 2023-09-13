@@ -238,5 +238,16 @@ contract DSCEngineTest is Test {
         uint256 userBalance = dsc.balanceOf(USER);
         assertEq(userBalance, 0);
     }
-      
+    
+    // TODO: healthFactor Tests
+
+    function testProperlyReportHealthFactor() public depositedCollateralAndMintedDsc(){
+        uint256 expectedHealthFactor = 100 ether;
+        uint256 healthFactor = dsce.getHealthFactor(USER);
+
+        //$100 minted at the price of $20,000 collteral at 50% liquidation threshold
+
+        assertEq(expectedHealthFactor, healthFactor);
+
+    }
 } 
