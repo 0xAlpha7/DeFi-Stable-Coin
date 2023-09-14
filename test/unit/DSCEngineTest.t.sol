@@ -272,24 +272,41 @@ contract DSCEngineTest is Test {
     //TODO: Liquidation Tests
 
     function testMustImproveHealthFactorOnLiquidation() public {
-        //Arrange
-
+        //Arrange -- user
         MockMoreDebtDSC mockDsc = new MockMoreDebtDSC(ethUsdPriceFeed);
         tokenAddresses = [weth];
         priceFeedAddresses = [ethUsdPriceFeed];
         address owner = msg.sender;
 
-        vm.startPrank(owner);
+        // vm.startPrank(owner);
         DSCEngine mockDsce = new DSCEngine(
             tokenAddresses,
             priceFeedAddresses,
             address(mockDsc)
         );
-        mockDsc.transferOwnership(address(mockDsc));
+        mockDsc.transferOwnership(address(mockDsce));
 
-        //Arrange
+        //Arrange -- Liquidator
         collateralToCover = 1 ether;
         ERC20Mock(weth).mint(liquidator, collateralToCover);
+
+        vm.startPrank(liquidator);
+        ERC20Mock(weth).approve(address(mockDsc), collateralToCover);
+        uint256 debtToCover = 10 ether;
+        mockDsce.depositeCollateralAndMintDsc(weth, collateralToCover, AMOUNT_TO_MINT);
+        
+        mockDsc.approve(address(mockDsce), debtToCover);
+
+        //Act
+        int256 ethUsdUpdatedPriceFeed = 18e8; // 1 Eth = $18
+        MockV3Aggregator(ethUsdPriceFeed).updateAnswer(ethUsdUpdatedPriceFeed);
+
+        //Act / Assert
+        vm.expectRevert(DSCEngine.DSCEngine__HealthFactorNotImproved.selector);
+        mockDsce.liquidate(weth, USER, debtToCover);
+        vm.stopPrank();
+
+
         
     }
 } 
