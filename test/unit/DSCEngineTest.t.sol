@@ -10,6 +10,7 @@ import {HelperConfig} from "../../script/HelperConfig.s.sol";
 import {ERC20Mock} from "@openzeppelin/contracts/mocks/ERC20Mock.sol";
 import {MockV3Aggregator} from "../../test/mocks/MockV3Aggregator.sol";
 import {console} from "forge-std/console.sol";
+import {MockMoreDebtDSC} from "../mocks/MockMoreDebtDSC.sol";
 
 contract DSCEngineTest is Test {
 
@@ -26,7 +27,12 @@ contract DSCEngineTest is Test {
     uint256 public constant STARTING_ERC20_BALANCE = 10 ether;
     uint256 public AMOUNT_TO_MINT = 100 ether;
 
+    //Liquidation 
+    address public liquidator = makeAddr("liquidator");
+    uint256 collateralToCover = 20 ether;
+
     address public USER = makeAddr("user");
+
 
     function setUp() public {
         deployer = new DeployDSC();
@@ -261,6 +267,29 @@ contract DSCEngineTest is Test {
         uint256 userHealthFactor = dsce.getHealthFactor(USER);
         //180 collateral / 200 debt = 0.9  
         assertEq(userHealthFactor, 0.9 ether);
+    }
 
+    //TODO: Liquidation Tests
+
+    function testMustImproveHealthFactorOnLiquidation() public {
+        //Arrange
+
+        MockMoreDebtDSC mockDsc = new MockMoreDebtDSC(ethUsdPriceFeed);
+        tokenAddresses = [weth];
+        priceFeedAddresses = [ethUsdPriceFeed];
+        address owner = msg.sender;
+
+        vm.startPrank(owner);
+        DSCEngine mockDsce = new DSCEngine(
+            tokenAddresses,
+            priceFeedAddresses,
+            address(mockDsc)
+        );
+        mockDsc.transferOwnership(address(mockDsc));
+
+        //Arrange
+        collateralToCover = 1 ether;
+        ERC20Mock(weth).mint(liquidator, collateralToCover);
+        
     }
 } 
