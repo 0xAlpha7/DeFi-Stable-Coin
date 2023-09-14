@@ -276,8 +276,7 @@ contract DSCEngineTest is Test {
         MockMoreDebtDSC mockDsc = new MockMoreDebtDSC(ethUsdPriceFeed);
         tokenAddresses = [weth];
         priceFeedAddresses = [ethUsdPriceFeed];
-        address owner = msg.sender;
-
+        // address owner = msg.sender;
         // vm.startPrank(owner);
         DSCEngine mockDsce = new DSCEngine(
             tokenAddresses,
@@ -304,9 +303,20 @@ contract DSCEngineTest is Test {
         //Act / Assert
         vm.expectRevert(DSCEngine.DSCEngine__HealthFactorNotImproved.selector);
         mockDsce.liquidate(weth, USER, debtToCover);
+        vm.stopPrank();        
+    }
+
+    function testCantLiquidateGoodHealthFactor() public depositedCollateralAndMintedDsc() {
+        ERC20Mock(weth).mint(liquidator, collateralToCover);
+
+        vm.startPrank(liquidator);
+        ERC20Mock(weth).approve(address(dsce), collateralToCover);
+        dsce.depositeCollateralAndMintDsc(weth, collateralToCover, AMOUNT_TO_MINT);
+
+        dsc.approve(address(dsce), AMOUNT_TO_MINT);
+
+        vm.expectRevert(DSCEngine.DSCEngine__HealthFactorOk.selector);
+        dsce.liquidate(weth, USER, AMOUNT_TO_MINT);
         vm.stopPrank();
-
-
-        
     }
 } 
