@@ -63,6 +63,7 @@ contract DSCEngineTest is Test {
         ERC20Mock(weth).approve(address(dsce), AMOUNT_COLLATERAL);
         dsce.depositeCollateralAndMintDsc(weth, AMOUNT_COLLATERAL, AMOUNT_TO_MINT);
         vm.stopPrank();
+
         int256 ethUsdUpdatedPrice = 18e8; // 1 ETH = $18
         MockV3Aggregator(ethUsdPriceFeed).updateAnswer(ethUsdUpdatedPrice);
         uint256 userHealthFactor = dsce.getHealthFactor(USER);
@@ -337,5 +338,9 @@ contract DSCEngineTest is Test {
         vm.expectRevert(DSCEngine.DSCEngine__HealthFactorOk.selector);
         dsce.liquidate(weth, USER, AMOUNT_TO_MINT);
         vm.stopPrank();
+    }
+
+    function testLiquidationPayoutIsCorrect() public {
+        uint256 liquidatorWethBalance = ERC20Mock(weth).balanceOf(liquidator); 
     }
 } 
