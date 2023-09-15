@@ -341,6 +341,9 @@ contract DSCEngineTest is Test {
     }
 
     function testLiquidationPayoutIsCorrect() public {
-        uint256 liquidatorWethBalance = ERC20Mock(weth).balanceOf(liquidator); 
+        uint256 liquidatorWethBalance = ERC20Mock(weth).balanceOf(liquidator);
+        uint256 expectedWeth = dsce.getTokenAmountFromUsd(weth, AMOUNT_TO_MINT) + (dsce.getTokenAmountFromUsd(weth, AMOUNT_TO_MINT) / dsce.getLiquidationBonus());
+
+         
     }
 } 
