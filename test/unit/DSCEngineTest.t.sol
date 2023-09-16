@@ -348,4 +348,19 @@ contract DSCEngineTest is Test {
         assertEq(liquidatorWethBalance, hardCodedExpected);
         assertEq(liquidatorWethBalance, expectedWeth);
     }
+
+    function testUserStilHasSomeEthAfterLiquidation() public liquidate() {
+        //get how much weth user lost
+        uint256 amountLiquidated = dsce.getTokenAmountFromUsd(weth, AMOUNT_TO_MINT) + (dsce.getTokenAmountFromUsd(weth, AMOUNT_TO_MINT) / dsce.getLiquidationBonus());
+        
+        uint256 usdAmountLiquidated = dsce.getUsdValue(weth, amountLiquidated);
+        uint256 expectedUserCollateralValueInUsd =  dsce.getUsdValue(weth, AMOUNT_COLLATERAL) - (usdAmountLiquidated);
+
+        (, uint256 userCollateralValueInUsd) = dsce.getAccountInformation(USER); 
+
+        uint256 hardCodedExpectedValue = 70000000000000000020;
+
+        assertEq(userCollateralValueInUsd, hardCodedExpectedValue);
+        assertEq(userCollateralValueInUsd, expectedUserCollateralValueInUsd);
+    }
 } 
