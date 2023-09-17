@@ -373,4 +373,12 @@ contract DSCEngineTest is Test {
         (uint256 userDscMinted, ) = dsce.getAccountInformation(USER);
         assertEq(userDscMinted, 0);
     }
+
+    //TODO: View & Pure Function Tests
+
+    function testGetCollateralTokenPriceFeed() public {
+        address priceFeed = dsce.getCollateralTokenPriceFeed(weth);
+        assertEq(priceFeed, ethUsdPriceFeed);
+        
+    }
 } 
