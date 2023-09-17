@@ -379,6 +379,10 @@ contract DSCEngineTest is Test {
     function testGetCollateralTokenPriceFeed() public {
         address priceFeed = dsce.getCollateralTokenPriceFeed(weth);
         assertEq(priceFeed, ethUsdPriceFeed);
-        
+    }
+
+    function testGetCollateralTokens() public {
+        address[] memory collateralTokens = dsce.getCollateralTokens();
+        assertEq(collateralTokens[0], weth);
     }
 } 
