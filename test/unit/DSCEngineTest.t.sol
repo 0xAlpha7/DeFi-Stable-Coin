@@ -27,6 +27,7 @@ contract DSCEngineTest is Test {
     uint256 public constant STARTING_ERC20_BALANCE = 10 ether;
     uint256 public AMOUNT_TO_MINT = 100 ether;
     uint256 public constant MIN_HEALTH_FACTOR = 1e18;
+    uint256 public constant LIQUIDATION_THRESHOLD = 50;
 
     //Liquidation 
     address public liquidator = makeAddr("liquidator");
@@ -392,4 +393,8 @@ contract DSCEngineTest is Test {
         assertEq(minHealthFactor, MIN_HEALTH_FACTOR);
     }
 
+    function testGetLiquidationThreshold() public {
+        uint256 liquidationThreshold = dsce.getLiquidationThreshold();
+        assertEq(liquidationThreshold, LIQUIDATION_THRESHOLD);
+    }
 } 
