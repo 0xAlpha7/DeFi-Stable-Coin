@@ -413,4 +413,14 @@ contract DSCEngineTest is Test {
         assertEq(collateralBalance, AMOUNT_COLLATERAL);
     }
 
+    function testGetAccountCollateralValue() public {
+        vm.startPrank(USER);
+        ERC20Mock(weth).approve(address(dsce), AMOUNT_COLLATERAL);
+        dsce.depositeCollateral(weth, AMOUNT_COLLATERAL);
+        vm.stopPrank();
+        uint256 collateralValue = dsce.getAccountCollateralValue(USER);
+        uint256 expectedCollateralValue = dsce.getUsdValue(weth, AMOUNT_COLLATERAL);
+        assertEq(expectedCollateralValue, collateralValue);
+    }
+
 } 
