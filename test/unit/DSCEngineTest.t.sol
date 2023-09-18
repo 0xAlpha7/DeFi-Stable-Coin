@@ -423,4 +423,10 @@ contract DSCEngineTest is Test {
         assertEq(expectedCollateralValue, collateralValue);
     }
 
+    function testGetDsc() public  {
+        address dscAddress = dsce.getDsc();
+        assertEq(dscAddress, address(dsc));
+        
+    }
+
 } 
