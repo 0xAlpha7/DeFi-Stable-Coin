@@ -425,8 +425,13 @@ contract DSCEngineTest is Test {
 
     function testGetDsc() public  {
         address dscAddress = dsce.getDsc();
-        assertEq(dscAddress, address(dsc));
-        
+        assertEq(dscAddress, address(dsc));   
+    }
+
+    function testLiquidationPrecision() public {
+        uint256 expectedLiquidationPrecision = 100;
+        uint256 actualLiquidationPrecision = dsce.getLiquidationPrecision();
+        assertEq(actualLiquidationPrecision, expectedLiquidationPrecision);
     }
 
 } 
