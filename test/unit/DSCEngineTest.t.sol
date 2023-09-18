@@ -388,7 +388,7 @@ contract DSCEngineTest is Test {
         assertEq(collateralTokens[0], weth);
     }
 
-      function testGetMinHealthFactor() public {
+    function testGetMinHealthFactor() public {
         uint256 minHealthFactor = dsce.getMinHealthFactor();
         assertEq(minHealthFactor, MIN_HEALTH_FACTOR);
     }
@@ -396,5 +396,11 @@ contract DSCEngineTest is Test {
     function testGetLiquidationThreshold() public {
         uint256 liquidationThreshold = dsce.getLiquidationThreshold();
         assertEq(liquidationThreshold, LIQUIDATION_THRESHOLD);
+    }
+
+    function testAccountCollateralValueAFromImformation() public depositedCollateral() {
+       (, uint256 collateralValue) = dsce.getAccountInformation(USER);
+       uint256 expectedCollateralValue = dsce.getUsdValue(weth, AMOUNT_COLLATERAL);
+        assertEq(collateralValue, expectedCollateralValue);
     }
 } 
