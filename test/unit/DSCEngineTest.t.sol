@@ -248,37 +248,7 @@ contract DSCEngineTest is Test {
 
         vm.expectRevert(DSCEngine.DSCEngine__MintFailed.selector);
         mockDsce.depositeCollateralAndMintDsc(weth, AMOUNT_COLLATERAL, AMOUNT_TO_MINT);
-        vm.stopPrank();
-        
-
-
- //Arrange / Setup
-        // address owner = msg.sender;
-        // vm.prank(owner);
-        // MockFailedTransferFrom mockDsc = new MockFailedTransferFrom();
-        // tokenAddresses = [address(mockDsc)];
-        // priceFeedAddresses = [ethUsdPriceFeed];
-        // vm.prank(owner);
-
-        // DSCEngine mockDsce = new DSCEngine(tokenAddresses, priceFeedAddresses, address(mockDsc));
-
-        // mockDsc.mint(USER, AMOUNT_COLLATERAL);
-
-        // vm.prank(owner);
-        // mockDsc.transferOwnership(address(mockDsce));
-
-        // //Arrange user
-        // vm.startPrank(USER);
-        // ERC20Mock(address(mockDsc)).approve(address(dsce), AMOUNT_COLLATERAL);
-
-        // //Act / Assert
-        // vm.expectRevert(DSCEngine.DSCEngine__TransferFailed.selector);
-        // mockDsce.depositeCollateral(address(mockDsc), AMOUNT_COLLATERAL);
-        // vm.stopPrank(); 
-
-
-
-        
+        vm.stopPrank();        
     }
 
     //TODO: BurnDsc test
