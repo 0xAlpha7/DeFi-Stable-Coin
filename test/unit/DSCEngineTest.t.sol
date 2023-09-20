@@ -13,6 +13,7 @@ import {console} from "forge-std/console.sol";
 import {MockMoreDebtDSC} from "../mocks/MockMoreDebtDSC.sol";
 import {MockFailedTransferFrom} from "../mocks/MockFailedTransferFrom.sol";
 import {MockFailedMintDSC} from "../mocks/MockFailedMintDSC.sol";
+import {MockFailedTransfer} from "../mocks/MockFailedTransfer.sol";
 
 contract DSCEngineTest is Test {
 
@@ -302,6 +303,26 @@ contract DSCEngineTest is Test {
         vm.startPrank(USER);
         dsce.redeemCollateral(weth, AMOUNT_COLLATERAL);
         vm.stopPrank();
+    }
+
+    function testRevertsIfTransferFails() public {
+        //Arrange - setup
+        address owner = msg.sender;
+        vm.prank(owner);
+        MockFailedTransfer mockDsc = new MockFailedTransfer();
+        tokenAddresses = [address(mockDsc)];
+        priceFeedAddresses = [ethUsdPriceFeed];
+        vm.prank(owner);
+        DSCEngine mockDsce = new DSCEngine(
+            tokenAddresses,
+            priceFeedAddresses,
+            address(mockDsc)
+        );
+        mockDsc.mint(USER, AMOUNT_COLLATERAL);
+
+        vm.prank(owner);
+        
+        
     }
 
     //TODO: redeem collateral for dsc
