@@ -321,7 +321,17 @@ contract DSCEngineTest is Test {
         mockDsc.mint(USER, AMOUNT_COLLATERAL);
 
         vm.prank(owner);
-        
+        mockDsc.transferOwnership(address(dsce));
+
+        // Arrange - user
+
+        vm.startPrank(USER);
+        ERC20Mock(address(mockDsc)).approve(address(mockDsce), AMOUNT_COLLATERAL);
+        // Act / Assert
+        mockDsce.depositeCollateral(address(mockDsc), AMOUNT_COLLATERAL);
+        vm.expectRevert(DSCEngine.DSCEngine__TransferFailed.selector);
+        mockDsce.redeemCollateral(address(mockDsc), AMOUNT_COLLATERAL);
+        vm.stopPrank();
         
     }
 
