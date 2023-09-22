@@ -33,6 +33,17 @@ contract OpenInvariantsTest is StdInvariant, Test {
     }
 
     function invariant_protocolMustHaveMoreValueThanTheTotalSupply() public view {
+        // get the value of all the collatetal in the protocol
+        // compare it to all the debt (dsc)
+        uint256 totalSupply = dsc.totalSupply();
+        uint256 totalWethDeposited = IERC20(weth).balanceOf(address(dsce));
+        uint256 totalBtcDeposited = IERC20(wbtc).balanceOf(address(dsce));
+
+        uint256 wethValue = dsce.getUsdValue(weth, totalWethDeposited);
+        uint256 wbtcValue = dsce.getUsdValue(wbtc, totalBtcDeposited);
+
+        assert(wethValue + wbtcValue >= totalSupply);
+
 
     }
     
