@@ -16,7 +16,11 @@ contract Handler is Test {
 
     constructor(DSCEngine _dscEngine, DecentralizedStableCoin _dsc ){
         dsce = _dscEngine;
-        dsc  = _dsc ; 
+        dsc  = _dsc ;
+        address[] memory collateralTokens = dsce.getCollateralTokens();
+        weth = ERC20Mock(collateralTokens[0]);
+        wbtc = ERC20Mock(collateralTokens[1]) ;
+
     }
 
     // redeem collateral
@@ -30,7 +34,7 @@ contract Handler is Test {
         if(collateralSeed % 2 == 0){
             return weth;
         }
-        
+        return wbtc;
     }
 
 }
