@@ -16,4 +16,10 @@ contract Handler is Test {
         dsc  = _dsc ; 
     }
 
+    // redeem collateral
+
+    function depositCollateral(address collateral, uint256 amountCollateral) public {
+        dsce.depositeCollateral(collateral ,amountCollateral);
+    }
+
 }
