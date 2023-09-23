@@ -26,7 +26,9 @@ contract Handler is Test {
     // redeem collateral
 
     function depositCollateral(uint256 collateralSeed, uint256 amountCollateral) public {
-        // dsce.depositeCollateral(collateralSeed ,amountCollateral);
+        ERC20Mock collateral = _getCollateralFromSeed(collateralSeed);
+        dsce.depositeCollateral(address(collateral) ,amountCollateral);
+
     }
 
     //Helper Function
