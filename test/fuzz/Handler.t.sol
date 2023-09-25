@@ -39,7 +39,10 @@ contract Handler is Test {
     function redeemCollateral(uint256 collateralSeed, uint256 amountCollateral) public {
         ERC20Mock collateral = _getCollateralFromSeed(collateralSeed);
         uint256 maxColateralToRedeem = dsce.getCollateralBalanceOfUser(address(collateral), msg.sender);
-        amountCollateral = bound(amountCollateral, 1, maxColateralToRedeem);
+        amountCollateral = bound(amountCollateral, 0, maxColateralToRedeem);
+        if(amountCollateral == 0){
+            return;
+        }
         dsce.redeemCollateral(address(collateral), amountCollateral);
         
     }
