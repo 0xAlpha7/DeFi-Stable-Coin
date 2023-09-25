@@ -44,7 +44,13 @@ contract Handler is Test {
             return;
         }
         dsce.redeemCollateral(address(collateral), amountCollateral);
-        
+    }
+
+    function mintDsc(uint256 amount) public{
+        amount = bound(amount, 1, MAX_DEPOSIT_SIZE);
+        vm.startPrank(msg.sender);
+        dsce.mintDsc(amount);
+        vm.stopPrank(); 
     }
 
     //Helper Function
