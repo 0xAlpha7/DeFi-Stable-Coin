@@ -56,8 +56,11 @@ contract OpenInvariantsTest is StdInvariant, Test {
         uint256 wbtcValue = dsce.getUsdValue(wbtc, totalBtcDeposited);
 
         assert(wethValue + wbtcValue >= totalSupply);
+    }
 
-
+    function invariant_gettersShouldNotRevert() public view {
+        dsce.getLiquidationBonus();
+        dsce.getPrecision();
     }
     
 }
