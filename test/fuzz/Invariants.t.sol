@@ -11,7 +11,7 @@
 
 pragma solidity ^0.8.19;
 
-import {Test} from "forge-std/Test.sol";
+import {Test, console} from "forge-std/Test.sol";
 import {StdInvariant} from "forge-std/StdInvariant.sol";
 import {DeployDSC} from "../../script/DeployDSC.s.sol";
 import {DSCEngine} from "../../src/DSCEngine.sol";
@@ -45,6 +45,12 @@ contract OpenInvariantsTest is StdInvariant, Test {
         uint256 totalSupply = dsc.totalSupply();
         uint256 totalWethDeposited = IERC20(weth).balanceOf(address(dsce));
         uint256 totalBtcDeposited = IERC20(wbtc).balanceOf(address(dsce));
+
+        console.log("totalSupply: ", totalSupply);
+        console.log("totalWethDeposited: ", totalWethDeposited);
+        console.log("totalBtcDeposited: ", totalBtcDeposited);
+        console.log("Time mint called: ", handler.timeMintIsCalled());
+
 
         uint256 wethValue = dsce.getUsdValue(weth, totalWethDeposited);
         uint256 wbtcValue = dsce.getUsdValue(wbtc, totalBtcDeposited);
