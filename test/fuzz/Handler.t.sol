@@ -78,6 +78,7 @@ contract Handler is Test {
         timeMintIsCalled++;
     }
 
+    // This breaks our invariant test suite
     function updateCollateralPrice(uint96 newPrice) public {
         int256 newPriceInt = int256(uint256(newPrice));
         ethUsdPriceFeed.updateAnswer(newPriceInt);
