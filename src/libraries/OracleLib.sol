@@ -14,7 +14,7 @@ import {AggregatorV3Interface} from "@chainlink/contracts/src/v0.8/interfaces/Ag
  * so if the chainlink network explodes and you have a lot of money locked in the protocol -- to bad
  * */
 
- library oracleLib {
+ library OracleLib {
     error OracleLib__StalePrice();
 
     uint256 private constant TIMEOUT = 3 hours;
