@@ -75,5 +75,23 @@ pragma solidity ^0.8.19;
 //         dsc.burn(amountDsc);
 //     }
 
+//     function mintDsc(uint256 amountDsc) public {
+//         amountDsc = bound(amountDsc, 0, MAX_DEPOSIT_SIZE);
+//         dsc.mint(msg.sender, amountDsc);
+//     }
+
+//     function liquidate(
+//         uint256 collateralSeed,
+//         address userToBeLiquidated,
+//         uint256 debtToCover
+//     ) public {
+//         ERC20Mock collateral = _getCollateralFromSeed(collateralSeed);
+//         dscEngine.liquidate(
+//             address(collateral),
+//             userToBeLiquidated,
+//             debtToCover
+//         );
+//     }
+
 
 // }
