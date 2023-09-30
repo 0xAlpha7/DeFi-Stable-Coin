@@ -370,7 +370,7 @@ contract DSCEngineTest is Test {
         assertEq(expectedHealthFactor, healthFactor);
     }
 
-    function testHealthFactorCanGoBelowOne() public {
+    function testHealthFactorCanGoBelowOne() public depositedCollateralAndMintedDsc {
         int256 ethUsdUpdatedPrice = 18e8; //1 eth = $18
         //we need $150 at all times if we have $100 of debt
 
@@ -384,11 +384,11 @@ contract DSCEngineTest is Test {
 
     function testMustImproveHealthFactorOnLiquidation() public {
         //Arrange -- user
+        address owner = msg.sender;
+        vm.startPrank(owner);
         MockMoreDebtDSC mockDsc = new MockMoreDebtDSC(ethUsdPriceFeed);
         tokenAddresses = [weth];
         priceFeedAddresses = [ethUsdPriceFeed];
-        // address owner = msg.sender;
-        // vm.startPrank(owner);
         DSCEngine mockDsce = new DSCEngine(
             tokenAddresses,
             priceFeedAddresses,
@@ -401,7 +401,7 @@ contract DSCEngineTest is Test {
         ERC20Mock(weth).mint(liquidator, collateralToCover);
 
         vm.startPrank(liquidator);
-        ERC20Mock(weth).approve(address(mockDsc), collateralToCover);
+        ERC20Mock(weth).approve(address(mockDsce), collateralToCover);
         uint256 debtToCover = 10 ether;
         mockDsce.depositeCollateralAndMintDsc(weth, collateralToCover, AMOUNT_TO_MINT);
         
