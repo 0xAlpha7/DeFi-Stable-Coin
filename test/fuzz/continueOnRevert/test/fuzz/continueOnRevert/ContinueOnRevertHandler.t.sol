@@ -45,4 +45,21 @@ pragma solidity ^0.8.19;
 //             dscEngine.getCollateralTokenPriceFeed(address(wbtc))
 //         );
 //     }
+
+//     // FUNCTOINS TO INTERACT WITH
+
+//     ///////////////
+//     // DSCEngine //
+//     ///////////////
+//     function mintAndDepositCollateral(
+//         uint256 collateralSeed,
+//         uint256 amountCollateral
+//     ) public {
+//         amountCollateral = bound(amountCollateral, 0, MAX_DEPOSIT_SIZE);
+//         ERC20Mock collateral = _getCollateralFromSeed(collateralSeed);
+//         collateral.mint(msg.sender, amountCollateral);
+//         dscEngine.depositCollateral(address(collateral), amountCollateral);
+//     }
+
+
 // }
