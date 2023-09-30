@@ -30,4 +30,19 @@ pragma solidity ^0.8.19;
 //     // Ghost Variables
 //     uint96 public constant MAX_DEPOSIT_SIZE = type(uint96).max;
 
+//     constructor(DSCEngine _dscEngine, DecentralizedStableCoin _dsc) {
+//         dscEngine = _dscEngine;
+//         dsc = _dsc;
+
+//         address[] memory collateralTokens = dscEngine.getCollateralTokens();
+//         weth = ERC20Mock(collateralTokens[0]);
+//         wbtc = ERC20Mock(collateralTokens[1]);
+
+//         ethUsdPriceFeed = MockV3Aggregator(
+//             dscEngine.getCollateralTokenPriceFeed(address(weth))
+//         );
+//         btcUsdPriceFeed = MockV3Aggregator(
+//             dscEngine.getCollateralTokenPriceFeed(address(wbtc))
+//         );
+//     }
 // }
