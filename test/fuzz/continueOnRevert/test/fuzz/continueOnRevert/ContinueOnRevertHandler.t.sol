@@ -93,5 +93,32 @@ pragma solidity ^0.8.19;
 //         );
 //     }
 
+//     /////////////////////////////
+//     // DecentralizedStableCoin //
+//     /////////////////////////////
+//     function transferDsc(uint256 amountDsc, address to) public {
+//         amountDsc = bound(amountDsc, 0, dsc.balanceOf(msg.sender));
+//         vm.prank(msg.sender);
+//         dsc.transfer(to, amountDsc);
+//     }
 
+//     /////////////////////////////
+//     // Aggregator //
+//     /////////////////////////////
+//     function updateCollateralPrice(
+//         uint128 newPrice,
+//         uint256 collateralSeed
+//     ) public {
+//         // int256 intNewPrice = int256(uint256(newPrice));
+//         int256 intNewPrice = 0;
+//         ERC20Mock collateral = _getCollateralFromSeed(collateralSeed);
+//         MockV3Aggregator priceFeed = MockV3Aggregator(
+//             dscEngine.getCollateralTokenPriceFeed(address(collateral))
+//         );
+
+//         priceFeed.updateAnswer(intNewPrice);
+//     }
+
+//     /// Helper Functions
+//   
 // }
