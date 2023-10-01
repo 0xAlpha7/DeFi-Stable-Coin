@@ -120,5 +120,19 @@ pragma solidity ^0.8.19;
 //     }
 
 //     /// Helper Functions
-//   
+//     function _getCollateralFromSeed(
+//         uint256 collateralSeed
+//     ) private view returns (ERC20Mock) {
+//         if (collateralSeed % 2 == 0) {
+//             return weth;
+//         } else {
+//             return wbtc;
+//         }
+//     }
+
+//     function callSummary() external view {
+//         console.log("Weth total deposited", weth.balanceOf(address(dscEngine)));
+//         console.log("Wbtc total deposited", wbtc.balanceOf(address(dscEngine)));
+//         console.log("Total supply of DSC", dsc.totalSupply());
+//     }
 // }
