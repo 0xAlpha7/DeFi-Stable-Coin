@@ -53,5 +53,26 @@ pragma solidity ^0.8.19;
 //         // targetContract(address(ethUsdPriceFeed)); Why can't we just do this?
 //     }
 
-//    
+//     function invariant_protocolMustHaveMoreValueThatTotalSupplyDollars()
+//         public
+//         view
+//     {
+//         uint256 totalSupply = dsc.totalSupply();
+//         uint256 wethDeposted = ERC20Mock(weth).balanceOf(address(dsce));
+//         uint256 wbtcDeposited = ERC20Mock(wbtc).balanceOf(address(dsce));
+
+//         uint256 wethValue = dsce.getUsdValue(weth, wethDeposted);
+//         uint256 wbtcValue = dsce.getUsdValue(wbtc, wbtcDeposited);
+
+//         console.log("wethValue: %s", wethValue);
+//         console.log("wbtcValue: %s", wbtcValue);
+
+//         assert(wethValue + wbtcValue >= totalSupply);
+//     }
+
+//     // function invariant_userCantCreateStabelcoinWithPoorHealthFactor() public {}
+
+//     function invariant_callSummary() public view {
+//         handler.callSummary();
+//     }
 // }
