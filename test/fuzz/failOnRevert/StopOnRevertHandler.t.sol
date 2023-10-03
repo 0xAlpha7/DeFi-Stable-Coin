@@ -55,7 +55,7 @@ contract StopOnRevertHandler is Test {
         vm.stopPrank();
     }
 
-     function redeemCollateral(uint256 collateralSeed, uint256 amountCollateral) public {
+    function redeemCollateral(uint256 collateralSeed, uint256 amountCollateral) public {
         ERC20Mock collateral = _getCollateralFromSeed(collateralSeed);
         uint256 maxCollateral = dscEngine.getCollateralBalanceOfUser(msg.sender, address(collateral));
 
@@ -64,6 +64,15 @@ contract StopOnRevertHandler is Test {
             return;
         }
         dscEngine.redeemCollateral(address(collateral), amountCollateral);
+    }
+
+    function burnDsc(uint256 amountDsc) public {
+        // Must burn more than 0
+        amountDsc = bound(amountDsc, 0, dsc.balanceOf(msg.sender));
+        if (amountDsc == 0) {
+            return;
+        }
+        dscEngine.burnDsc(amountDsc);
     }
 
 
