@@ -40,6 +40,20 @@ contract StopOnRevertHandler is Test {
 
     // FUNCTOINS TO INTERACT WITH
   
+    ///////////////
+    // DSCEngine //
+    ///////////////
+    function mintAndDepositCollateral(uint256 collateralSeed, uint256 amountCollateral) public {
+        // must be more than 0
+        amountCollateral = bound(amountCollateral, 1, MAX_DEPOSIT_SIZE);
+        ERC20Mock collateral = _getCollateralFromSeed(collateralSeed);
+
+        vm.startPrank(msg.sender);
+        collateral.mint(msg.sender, amountCollateral);
+        collateral.approve(address(dscEngine), amountCollateral);
+        dscEngine.depositeCollateral(address(collateral), amountCollateral);
+        vm.stopPrank();
+    }
 
       /// Helper Functions
     function _getCollateralFromSeed(uint256 collateralSeed) private view returns (ERC20Mock) {
