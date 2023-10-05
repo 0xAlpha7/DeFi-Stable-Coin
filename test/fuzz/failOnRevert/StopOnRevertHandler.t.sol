@@ -75,6 +75,15 @@ contract StopOnRevertHandler is Test {
         dscEngine.burnDsc(amountDsc);
     }
 
+     // Only the DSCEngine can mint DSC!
+    // function mintDsc(uint256 amountDsc) public {
+    //     amountDsc = bound(amountDsc, 0, MAX_DEPOSIT_SIZE);
+    //     vm.prank(dsc.owner());
+    //     dsc.mint(msg.sender, amountDsc);
+    // }
+
+
+
 
       /// Helper Functions
     function _getCollateralFromSeed(uint256 collateralSeed) private view returns (ERC20Mock) {
