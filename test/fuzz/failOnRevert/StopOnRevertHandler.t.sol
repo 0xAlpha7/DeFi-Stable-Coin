@@ -82,7 +82,16 @@ contract StopOnRevertHandler is Test {
     //     dsc.mint(msg.sender, amountDsc);
     // }
 
-
+    function liquidate(uint256 collateralSeed, address userToBeLiquidated, uint256 debtToCover) public {
+        uint256 minHealthFactor = dscEngine.getMinHealthFactor();
+        uint256 userHealthFactor = dscEngine.getHealthFactor(userToBeLiquidated);
+        if (userHealthFactor >= minHealthFactor) {
+            return;
+        }
+        debtToCover = bound(debtToCover, 1, uint256(type(uint96).max));
+        ERC20Mock collateral = _getCollateralFromSeed(collateralSeed);
+        dscEngine.liquidate(address(collateral), userToBeLiquidated, debtToCover);
+    }
 
 
       /// Helper Functions
