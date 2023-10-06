@@ -93,6 +93,15 @@ contract StopOnRevertHandler is Test {
         dscEngine.liquidate(address(collateral), userToBeLiquidated, debtToCover);
     }
 
+    function transferDsc(uint256 amountDsc, address to) public {
+        if (to == address(0)) {
+            to = address(1);
+        }
+        amountDsc = bound(amountDsc, 0, dsc.balanceOf(msg.sender));
+        vm.prank(msg.sender);
+        dsc.transfer(to, amountDsc);
+    }
+
 
       /// Helper Functions
     function _getCollateralFromSeed(uint256 collateralSeed) private view returns (ERC20Mock) {
