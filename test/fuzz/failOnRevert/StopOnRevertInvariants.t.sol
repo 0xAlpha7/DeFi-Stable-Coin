@@ -19,12 +19,21 @@ import {console} from "forge-std/console.sol";
 
 
 contract StopOnRevertInvariants is StdInvariant, Test {
+
+    DSCEngine public dsce;
+    DecentralizedStableCoin public dsc;
+    HelperConfig public helperConfig;
   
     address public ethUsdPriceFeed;
     address public btcUsdPriceFeed;
     address public weth;
     address public wbtc;
 
+ // Liquidation
+    address public liquidator = makeAddr("liquidator");
+    uint256 public collateralToCover = 20 ether;
+
+    StopOnRevertHandler public handler;
   
     function setUp() external {
     }
