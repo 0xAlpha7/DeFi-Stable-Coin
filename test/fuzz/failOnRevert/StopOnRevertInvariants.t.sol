@@ -36,6 +36,11 @@ contract StopOnRevertInvariants is StdInvariant, Test {
     StopOnRevertHandler public handler;
   
     function setUp() external {
+        DeployDSC deployer = new DeployDSC();
+        (dsc, dsce, helperConfig) = deployer.run();
+        (ethUsdPriceFeed, btcUsdPriceFeed, weth, wbtc,) = helperConfig.activeNetworkConfig();
+        handler = new StopOnRevertHandler(dsce, dsc);
+        targetContract(address(handler));
     }
 
   
