@@ -42,6 +42,20 @@ contract StopOnRevertInvariants is StdInvariant, Test {
         handler = new StopOnRevertHandler(dsce, dsc);
         targetContract(address(handler));
     }
+    
+    function invariant_protocolMustHaveMoreValueThatTotalSupplyDollars() public view {
+        uint256 totalSupply = dsc.totalSupply();
+        uint256 wethDeposted = ERC20Mock(weth).balanceOf(address(dsce));
+        uint256 wbtcDeposited = ERC20Mock(wbtc).balanceOf(address(dsce));
+
+        uint256 wethValue = dsce.getUsdValue(weth, wethDeposted);
+        uint256 wbtcValue = dsce.getUsdValue(wbtc, wbtcDeposited);
+
+        console.log("wethValue: %s", wethValue);
+        console.log("wbtcValue: %s", wbtcValue);
+
+        assert(wethValue + wbtcValue >= totalSupply);
+    }
 
   
 }
