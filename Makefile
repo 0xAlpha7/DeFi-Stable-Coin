@@ -20,18 +20,7 @@ remove :; rm -rf .gitmodules && rm -rf .git/modules/* && rm -rf lib && touch .gi
 
 install :; forge install cyfrin/foundry-devops@0.0.11 --no-commit && forge install smartcontractkit/chainlink-brownie-contracts@0.6.1 --no-commit && forge install foundry-rs/forge-std@v1.5.3 --no-commit && forge install openzeppelin/openzeppelin-contracts@v4.8.3 --no-commit
 
-# Update Dependencies
-update:; forge update
 
-build:; forge build
-
-test :; forge test 
-
-coverage :; forge coverage --report debug > coverage-report.txt
-
-snapshot :; forge snapshot
-
-format :; forge fmt
 
 anvil :; anvil -m 'test test test test test test test test test test test junk' --steps-tracing --block-time 1
 
