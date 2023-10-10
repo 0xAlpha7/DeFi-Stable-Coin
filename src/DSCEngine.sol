@@ -40,7 +40,6 @@ contract DSCEngine is ReentrancyGuard {
     using OracleLib for AggregatorV3Interface;
 
     //!state variables
-
     uint256 private constant ADDITIONAL_FEED_PRECISION = 1e10; 
     uint256 private constant PRECISION = 1e18; 
     uint256 private constant LIQUIDATION_THRESHOLD = 50; //200% collateralized
@@ -48,13 +47,10 @@ contract DSCEngine is ReentrancyGuard {
     uint256 private constant MIN_HEALTH_FACTOR = 1e18;
     uint256 private constant LIQUIDATION_BONUS = 10;  //10% bonus
 
-
-
     mapping(address token => address priceFeed) private s_priceFeed;
     mapping(address user => mapping(address token => uint256 amount)) private s_collateralDeposited;
     mapping(address user => uint256 amountDscMinted) private s_DSCMinted;
     address[] private s_collateralTokens;
-
 
     DecentralizedStableCoin private immutable i_dsc;
 
@@ -119,8 +115,7 @@ contract DSCEngine is ReentrancyGuard {
         bool success = IERC20(tokenCollateralAddress).transferFrom(msg.sender, address(this), amountCollateral);
         if(!success){
             revert DSCEngine__TransferFailed();
-        }
-        
+        }        
     }
 
     /**
@@ -133,8 +128,6 @@ contract DSCEngine is ReentrancyGuard {
         burnDsc(amountDscToBurn);
         redeemCollateral(tokenCollateralAddress, amountCollateral);
         // redeemCollateral already checks health factor
-
-
     }
 
     // In order to redeem collateral:
@@ -145,7 +138,6 @@ contract DSCEngine is ReentrancyGuard {
         _redeemCollateral(tokenCollateralAddress, amountCollateral, msg.sender, msg.sender);
         _revertIfHealthFactorIsBroken(msg.sender);
     }
-
 
     /**
      * @notice Follow CEI pattern (checks effects Interaction)
@@ -161,7 +153,6 @@ contract DSCEngine is ReentrancyGuard {
         if(!minted){
             revert DSCEngine__MintFailed();
         }
-
     }
 
     //no need to check if this breaks health factor
@@ -170,7 +161,6 @@ contract DSCEngine is ReentrancyGuard {
         _revertIfHealthFactorIsBroken(msg.sender);  //i don't think this would ever hit
     }
     
-
     /**
      * @param collateral: The ERC20 collateral address to liquidate from user
      * @param user: The user who has broken the health factor. Their _helthFactor should be below MIN_HEALTH_FACTOR
@@ -203,7 +193,6 @@ contract DSCEngine is ReentrancyGuard {
             revert DSCEngine__HealthFactorNotImproved();
         }
         _revertIfHealthFactorIsBroken(user);
-
     }
 
     function getHealthFactor() external view {}
@@ -238,7 +227,6 @@ contract DSCEngine is ReentrancyGuard {
         collateralValueInUsd = getAccountCollateralValue(user);         
     }
 
-
     /**
      * returns how close to liquidation a user is
      * if a user goes below 1. then they can get liquidated
@@ -249,7 +237,6 @@ contract DSCEngine is ReentrancyGuard {
         //2: total collateral VALUE (make sure the VALUE > total DSC minted)
         (uint256 totalDscMinted, uint256 collateralValueInUsd) = _getAccountInformation(user);
     
-
         //1000 ETH * 50 = 50,000 / 100 = 500
 
         //150 ETH * 50 = 7500 / 100 = 75 (75 /100 < 1) 
@@ -258,9 +245,7 @@ contract DSCEngine is ReentrancyGuard {
 
         //100 ETH / 100 DSC = 1.5
         // return (collateralValueInUsd / totalDscMinted ); //it will not hanle points values
-
     }
-
 
    /**
      * check health factor (do they have enough collateral?)
